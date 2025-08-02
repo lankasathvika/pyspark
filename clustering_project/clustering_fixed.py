@@ -2,18 +2,18 @@ from pyspark.sql import SparkSession
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import VectorAssembler
 
-# ✅ Create Spark session
+#  Create Spark session
 spark = SparkSession.builder \
     .master("local[*]") \
     .appName("PySpark Clustering") \
     .getOrCreate()
 
-# ✅ Reduce logs
+#  Reduce logs
 spark.sparkContext.setLogLevel("ERROR")
 
-print("✅ Spark session started...")
+print(" Spark session started...")
 
-# ✅ Sample clustering data
+#  Sample clustering data
 data = [
     (1, 1.0, 1.0),
     (2, 1.1, 1.1),
@@ -23,29 +23,29 @@ data = [
     (6, 5.5, 6.0)
 ]
 
-# ✅ Create DataFrame
+#  Create DataFrame
 df = spark.createDataFrame(data, ["id", "feature1", "feature2"])
-print("✅ Sample DataFrame created:")
+print(" Sample DataFrame created:")
 df.show()
 
-# ✅ Convert features to vector
+#  Convert features to vector
 assembler = VectorAssembler(inputCols=["feature1", "feature2"], outputCol="features")
 df_vector = assembler.transform(df)
 
-# ✅ Train KMeans
+#  Train KMeans
 kmeans = KMeans(k=2, seed=1)
 model = kmeans.fit(df_vector)
 
-# ✅ Predict
+#  Predict
 predictions = model.transform(df_vector)
-print("✅ Predictions:")
+print(" Predictions:")
 predictions.select("id", "features", "prediction").show()
 
-# ✅ Show cluster centers
-print("✅ Cluster Centers:")
+#  Show cluster centers
+print(" Cluster Centers:")
 for center in model.clusterCenters():
     print(center)
 
-# ✅ Close session
+# Close session
 spark.stop()
-print("✅ Spark session stopped.")
+print(" Spark session stopped.")
